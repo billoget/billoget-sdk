@@ -12,7 +12,7 @@ class HttpClient {
     }
     createAxiosInstance() {
         const instance = axios_1.default.create({
-            baseURL: this.config.baseUrl || "https://api.billoget.com",
+            baseURL: this.config.baseUrl || "https://api.billoget.com/v1",
             timeout: this.config.timeout || 30000,
             headers: {
                 "Content-Type": "application/json",
