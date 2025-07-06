@@ -1,19 +1,20 @@
-// Main SDK export
+// Main SDK class
 export { BillogetSDK } from "./billoget-sdk";
 
-// Export types
-export * from "./types";
-export * from "./types/config";
-export * from "./types/product";
-export * from "./types/query";
-
-// Export services for advanced usage
+// Services
 export { BudgetsService } from "./services/budgets";
 export { CustomersService } from "./services/customers";
 export { ProductsService } from "./services/products";
 export { WebhooksService } from "./services/webhooks";
+export { BudgetApprovalsService } from "./services/budget-approvals";
+export { UBSService } from "./services/ubs";
 
-// Export utilities
+// Types and interfaces
+export * from "./types";
+export * from "./types/config";
+export * from "./types/query";
+
+// Utilities
 export { HttpClient } from "./utils/http-client";
 
 // Default export

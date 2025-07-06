@@ -1,37 +1,106 @@
 import { HttpClient } from "../utils/http-client";
-import {
-  Budget,
-  CreateBudgetRequest,
-  UpdateBudgetRequest,
-  BudgetQueryParams,
-  ApiResponse,
-} from "../types";
+import { Budget, BudgetQuery, PaginatedResponse } from "../types";
 
 export class BudgetsService {
-  private readonly basePath = "/api/public/budgets";
-
   constructor(private httpClient: HttpClient) {}
 
-  async list(params?: BudgetQueryParams): Promise<ApiResponse<Budget[]>> {
-    return this.httpClient.get<Budget[]>(this.basePath, params);
+  /**
+   * Get all budgets with pagination and filters (READ ONLY)
+   * Note: Budgets cannot be created/edited via API to maintain data integrity
+   */
+  async list(query: BudgetQuery = {}): Promise<PaginatedResponse<Budget>> {
+    const params = new URLSearchParams();
+
+    if (query.page) params.append("page", query.page.toString());
+    if (query.limit) params.append("limit", query.limit.toString());
+    if (query.status !== undefined)
+      params.append("status", query.status.toString());
+    if (query.customerId)
+      params.append("customerId", query.customerId.toString());
+    if (query.search) params.append("search", query.search);
+    if (query.startDate) params.append("startDate", query.startDate);
+    if (query.endDate) params.append("endDate", query.endDate);
+
+    const url = `/api/public/budgets${params.toString() ? `?${params.toString()}` : ""}`;
+    const response = await this.httpClient.get<PaginatedResponse<Budget>>(url);
+    return response.data;
   }
 
-  async getById(id: string): Promise<ApiResponse<Budget>> {
-    return this.httpClient.get<Budget>(`${this.basePath}/${id}`);
+  /**
+   * Get a specific budget by ID (READ ONLY)
+   */
+  async get(id: number): Promise<Budget> {
+    const response = await this.httpClient.get<Budget>(
+      `/api/public/budgets/${id}`
+    );
+    return response.data;
   }
 
-  async create(data: CreateBudgetRequest): Promise<ApiResponse<Budget>> {
-    return this.httpClient.post<Budget>(this.basePath, data);
+  /**
+   * Search budgets by customer name, comments or budget ID
+   */
+  async search(
+    searchTerm: string,
+    query: Omit<BudgetQuery, "search"> = {}
+  ): Promise<PaginatedResponse<Budget>> {
+    return this.list({
+      ...query,
+      search: searchTerm,
+    });
   }
 
-  async update(
-    id: string,
-    data: UpdateBudgetRequest
-  ): Promise<ApiResponse<Budget>> {
-    return this.httpClient.put<Budget>(`${this.basePath}/${id}`, data);
+  /**
+   * Get budgets by customer ID
+   */
+  async getByCustomer(
+    customerId: number,
+    query: Omit<BudgetQuery, "customerId"> = {}
+  ): Promise<PaginatedResponse<Budget>> {
+    return this.list({
+      ...query,
+      customerId,
+    });
   }
 
-  async delete(id: string): Promise<ApiResponse<void>> {
-    return this.httpClient.delete<void>(`${this.basePath}/${id}`);
+  /**
+   * Get budgets by status
+   */
+  async getByStatus(
+    status: number,
+    query: Omit<BudgetQuery, "status"> = {}
+  ): Promise<PaginatedResponse<Budget>> {
+    return this.list({
+      ...query,
+      status,
+    });
   }
+
+  /**
+   * Get budgets within a date range
+   */
+  async getByDateRange(
+    startDate: string,
+    endDate: string,
+    query: Omit<BudgetQuery, "startDate" | "endDate"> = {}
+  ): Promise<PaginatedResponse<Budget>> {
+    return this.list({
+      ...query,
+      startDate,
+      endDate,
+    });
+  }
+
+  /**
+   * Get budgets with pagination (alias for list)
+   */
+  async paginate(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<PaginatedResponse<Budget>> {
+    return this.list({ page, limit });
+  }
+
+  // Note: Create, update, and delete methods are intentionally omitted
+  // Budgets should only be managed through the main Billoget application
+  // to maintain data integrity and business logic
 }

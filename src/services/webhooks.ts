@@ -1,5 +1,5 @@
 import { HttpClient } from "../utils/http-client";
-import { WebhookTestRequest, WebhookResponse } from "../types/query";
+import { WebhookTestRequest, WebhookTestResponse } from "../types/query";
 import { ApiResponse } from "../types";
 
 export class WebhooksService {
@@ -7,7 +7,12 @@ export class WebhooksService {
 
   constructor(private httpClient: HttpClient) {}
 
-  async test(data: WebhookTestRequest): Promise<ApiResponse<WebhookResponse>> {
-    return this.httpClient.post<WebhookResponse>(`${this.basePath}/test`, data);
+  async test(
+    data: WebhookTestRequest
+  ): Promise<ApiResponse<WebhookTestResponse>> {
+    return this.httpClient.post<WebhookTestResponse>(
+      `${this.basePath}/test`,
+      data
+    );
   }
 }

@@ -14,16 +14,11 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpClient = exports.WebhooksService = exports.ProductsService = exports.CustomersService = exports.BudgetsService = exports.BillogetSDK = void 0;
-// Main SDK export
+exports.HttpClient = exports.UBSService = exports.BudgetApprovalsService = exports.WebhooksService = exports.ProductsService = exports.CustomersService = exports.BudgetsService = exports.BillogetSDK = void 0;
+// Main SDK class
 var billoget_sdk_1 = require("./billoget-sdk");
 Object.defineProperty(exports, "BillogetSDK", { enumerable: true, get: function () { return billoget_sdk_1.BillogetSDK; } });
-// Export types
-__exportStar(require("./types"), exports);
-__exportStar(require("./types/config"), exports);
-__exportStar(require("./types/product"), exports);
-__exportStar(require("./types/query"), exports);
-// Export services for advanced usage
+// Services
 var budgets_1 = require("./services/budgets");
 Object.defineProperty(exports, "BudgetsService", { enumerable: true, get: function () { return budgets_1.BudgetsService; } });
 var customers_1 = require("./services/customers");
@@ -32,7 +27,15 @@ var products_1 = require("./services/products");
 Object.defineProperty(exports, "ProductsService", { enumerable: true, get: function () { return products_1.ProductsService; } });
 var webhooks_1 = require("./services/webhooks");
 Object.defineProperty(exports, "WebhooksService", { enumerable: true, get: function () { return webhooks_1.WebhooksService; } });
-// Export utilities
+var budget_approvals_1 = require("./services/budget-approvals");
+Object.defineProperty(exports, "BudgetApprovalsService", { enumerable: true, get: function () { return budget_approvals_1.BudgetApprovalsService; } });
+var ubs_1 = require("./services/ubs");
+Object.defineProperty(exports, "UBSService", { enumerable: true, get: function () { return ubs_1.UBSService; } });
+// Types and interfaces
+__exportStar(require("./types"), exports);
+__exportStar(require("./types/config"), exports);
+__exportStar(require("./types/query"), exports);
+// Utilities
 var http_client_1 = require("./utils/http-client");
 Object.defineProperty(exports, "HttpClient", { enumerable: true, get: function () { return http_client_1.HttpClient; } });
 // Default export
