@@ -95,6 +95,9 @@ export interface CreateBudgetDto {
   items: CreateBudgetItemDto[];
 }
 
+// Alias for public budget creation
+export interface CreateBudgetRequest extends CreateBudgetDto {}
+
 // Budget Approval types
 export enum ApprovalStatus {
   PENDING = "pending",
@@ -199,19 +202,37 @@ export interface PublicBudget {
   ubs_version?: string;
   sign_track_id?: string;
   business_budget_id?: number;
+  isArchived?: boolean;
   // Relations
   customer?: Pick<Customer, "firstName" | "lastName" | "email" | "phoneNumber">;
   seller?: {
-    firstName: string;
-    lastName: string;
+    id: number;
+    displayName: string;
     email: string;
+    business?: {
+      id: number;
+      name: string;
+      logo?: string;
+      category?: string;
+      description?: string;
+      address?: string;
+      alternativeAddress?: string;
+      phone?: string;
+      email?: string;
+      website?: string;
+    };
   };
   business?: {
+    id: number;
     name: string;
-    email?: string;
-    phoneNumber?: string;
+    logo?: string;
+    category?: string;
+    description?: string;
     address?: string;
-    logoUrl?: string;
+    alternativeAddress?: string;
+    phone?: string;
+    email?: string;
+    website?: string;
   };
   items?: Array<{
     id: number;
@@ -219,13 +240,23 @@ export interface PublicBudget {
     unitPrice: number;
     subtotal: number;
     product?: {
+      id: number;
+      productCode: string;
       description: string;
       category: string;
+      price: number;
+      type: ProductType;
+      netContent?: number;
+      netContentUnit?: string;
       sku?: string;
+      barcode?: string;
+      imageUrl?: string;
+      isActive: boolean;
     };
     package?: {
       name: string;
       description?: string;
+      totalPrice?: number;
     };
   }>;
 }

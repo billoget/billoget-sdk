@@ -6,6 +6,13 @@ class BudgetsService {
         this.httpClient = httpClient;
     }
     /**
+     * Create a new budget publicly (returns public URL)
+     */
+    async createPublic(budgetData) {
+        const response = await this.httpClient.post("/api/budgets/public", budgetData);
+        return response.data;
+    }
+    /**
      * Get all budgets with pagination and filters (READ ONLY)
      * Note: Budgets cannot be created/edited via API to maintain data integrity
      */

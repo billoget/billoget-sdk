@@ -1,6 +1,6 @@
 {
   "name": "billoget-sdk",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Official Node.js SDK for Billoget Public API - Complete budget, customer, and product management with approval workflows and UBS support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

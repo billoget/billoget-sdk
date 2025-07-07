@@ -5,6 +5,153 @@ All notable changes to the Billoget SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-01-15
+
+### Added
+
+#### New Public Budget Creation
+
+- **BudgetsService.createPublic()** - Create budgets via public API
+  - Returns public URL for budget viewing
+  - No authentication required for budget creation
+  - Integrates with UBS (Unified Budgeting Standard)
+  - Response includes `publicUrl`, `budgetId`, and `publicToken`
+
+#### Enhanced Budget Data
+
+- **Extended Budget Fields** - Additional fields in budget responses:
+  - `iva` - Tax amount for the budget
+  - `paymentUrl` - Direct payment link
+  - `publicToken` - Public access token
+  - `comments` - Additional budget comments
+  - `ubs_id` - UBS unique identifier
+  - `ubs_version` - UBS standard version
+  - `sign_track_id` - Digital signature tracking ID
+  - `isArchived` - Budget archival status
+
+#### Enhanced Product Information
+
+- **Complete Product Data** - Full product details in budget items:
+  - `productCode` - Product identification code
+  - `category` - Product category
+  - `type` - Product type (PRODUCT/SERVICE)
+  - `netContent` - Net content amount
+  - `netContentUnit` - Net content unit of measure
+  - `isActive` - Product active status
+
+#### Enhanced Business Information
+
+- **Complete Business Data** - Full business details in budget responses:
+  - Complete seller business information
+  - Budget business information (if different from seller)
+  - Enhanced address and contact information
+  - Logo and branding details
+
+### Changed
+
+#### API Response Structure
+
+- **PublicBudget Interface** - Updated to include all new fields
+- **BudgetItem Interface** - Enhanced with complete product/package data
+- **Business Relations** - Full business information in budget responses
+
+#### Type Definitions
+
+- **CreateBudgetRequest** - New type alias for public budget creation
+- **Enhanced PublicBudget** - Complete type definitions for all new fields
+- **Product Information** - Full product details in budget items
+
+### Technical Improvements
+
+- Enhanced type safety with complete field definitions
+- Improved response parsing for new data structures
+- Better integration with UBS standard
+- Enhanced error handling for public endpoints
+
+### Usage Examples
+
+#### Creating Public Budgets
+
+```javascript
+const result = await billoget.budgets.createPublic({
+  currency: "USD",
+  issueDate: new Date(),
+  expirationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+  customerId: 123,
+  sellerId: 456,
+  minimumPaymentToConfirm: 100.0,
+  subtotal: 1000.0,
+  total: 1210.0,
+  iva: 210.0,
+  comments: "Budget for new project",
+  items: [
+    {
+      productId: 789,
+      quantity: 2,
+      unitPrice: 500.0,
+    },
+  ],
+});
+
+console.log(`Budget created: ${result.publicUrl}`);
+// Output: Budget created: https://app.billoget.com/budget/abc123_xyz789
+```
+
+#### Accessing Enhanced Budget Data
+
+```javascript
+const budget = await billoget.ubs.getBudgetByToken("abc123_xyz789");
+
+console.log(`Budget #${budget.id}`);
+console.log(`Tax: ${budget.iva}`);
+console.log(`Payment URL: ${budget.paymentUrl}`);
+console.log(`UBS ID: ${budget.ubs_id}`);
+console.log(`Archived: ${budget.isArchived}`);
+
+// Access complete product information
+budget.items?.forEach((item) => {
+  console.log(`Product: ${item.product?.productCode} - ${item.product?.description}`);
+  console.log(`Category: ${item.product?.category}`);
+  console.log(`Type: ${item.product?.type}`);
+});
+```
+
+### Migration Guide
+
+#### From 1.1.0 to 1.2.0
+
+**New Public Budget Creation:**
+
+```javascript
+// ✅ New in 1.2.0
+const result = await billoget.budgets.createPublic(budgetData);
+console.log(`Share this URL: ${result.publicUrl}`);
+```
+
+**Enhanced Budget Data Access:**
+
+```javascript
+// ✅ Enhanced in 1.2.0 - More fields available
+const budget = await billoget.ubs.getBudgetByToken("token");
+console.log(`Tax: ${budget.iva}`); // New field
+console.log(`Payment: ${budget.paymentUrl}`); // New field
+console.log(`UBS ID: ${budget.ubs_id}`); // New field
+console.log(`Archived: ${budget.isArchived}`); // New field
+```
+
+**Complete Product Information:**
+
+```javascript
+// ✅ Enhanced in 1.2.0 - Complete product data
+budget.items?.forEach((item) => {
+  const product = item.product;
+  console.log(`Code: ${product?.productCode}`); // New field
+  console.log(`Category: ${product?.category}`); // New field
+  console.log(`Type: ${product?.type}`); // New field
+  console.log(`Net Content: ${product?.netContent} ${product?.netContentUnit}`); // New fields
+});
+```
+
 ## [1.1.0] - 2025-07-06
 
 ### Added

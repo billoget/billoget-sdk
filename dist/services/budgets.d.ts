@@ -1,8 +1,18 @@
 import { HttpClient } from "../utils/http-client";
-import { Budget, BudgetQuery, PaginatedResponse } from "../types";
+import { Budget, BudgetQuery, PaginatedResponse, CreateBudgetRequest } from "../types";
 export declare class BudgetsService {
     private httpClient;
     constructor(httpClient: HttpClient);
+    /**
+     * Create a new budget publicly (returns public URL)
+     */
+    createPublic(budgetData: CreateBudgetRequest): Promise<{
+        success: boolean;
+        message: string;
+        publicUrl: string;
+        budgetId: number;
+        publicToken: string;
+    }>;
     /**
      * Get all budgets with pagination and filters (READ ONLY)
      * Note: Budgets cannot be created/edited via API to maintain data integrity
